@@ -1,33 +1,28 @@
 import { notFound } from "next/navigation";
 
-export const dynamicParams = true 
+export const dynamicParams = true;
 
-export async function generateStaticParams(){
-const res = await fetch('http://localhost:4000/tickets')
-const tickets = await res.json()
-return tickets.map((ticket)=>({
-id:ticket.id
-}))
-
-
+export async function generateStaticParams() {
+  const res = await fetch("http://localhost:4000/tickets");
+  const tickets = await res.json();
+  return tickets.map((ticket) => ({
+    id: ticket.id,
+  }));
 }
 
-
-
 async function getTicket(id) {
-    
-     // imitate delay
-  await new Promise(resolve=>setTimeout(resolve,1000))
+  // imitate delay
+//   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const res = await fetch("http://localhost:4000/tickets/" + id, {
     next: {
-      revalidate:60,
+      revalidate: 60,
     },
   });
 
- if (!res.ok) { 
+  if (!res.ok) {
     notFound();
- }
+  }
   return res.json();
 }
 async function TicketDetails({ params }) {
